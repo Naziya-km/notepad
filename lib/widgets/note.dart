@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class notesCard extends StatefulWidget {
   final String items;
-  const notesCard({super.key, required this.items});
+  final String itemss;
+  const notesCard({super.key, required this.items, required this.itemss});
 
   @override
   State<notesCard> createState() => _notesCardState();
@@ -11,26 +12,46 @@ class notesCard extends StatefulWidget {
 
 class _notesCardState extends State<notesCard> {
   List<String> items = [];
-  String title = "";
-  getdata() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('action');
-    setState(() {
-      title = action!;
-    });
-  }
+  List<String> itemss = [];
 
-  @override
+  // String title = "";
+  // String notes = "";
+  // getdata() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   final String? action = prefs.getString('action');
+  //   final String? actions = prefs.getString('actions');
+
+  //   setState(() {
+  //     title = action!;
+  //     notes = actions!;
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   getdata();
+  // }
+
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Text(widget.items),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        height: 200,
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Text(
+            widget.itemss,
+            style: TextStyle(fontSize: 45),
+          ),
+          Text(
+            widget.items,
+            style: TextStyle(fontSize: 25),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
       ),
     );
   }

@@ -14,26 +14,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  // void initState() {
-  //   getdata();
-  //   // TODO: implement initState
-  //   super.initState();
-  // }
+  var titlecontroller = TextEditingController();
+  var notescontroller = TextEditingController();
 
-  var title = TextEditingController();
-
-  List items = [];
+  @override
+  List title = [];
+  List notes = [];
+  List<String> addednotes = [];
+  List<String> addedtitle = [];
 
   setdata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('items', <String>['Earth', 'Moon', 'Sun']);
+    await prefs.setStringList('titles', addednotes);
+    await prefs.setStringList('notes', addedtitle);
   }
 
   getdata() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String>? data = prefs.getStringList('items');
+    final List<String>? data = prefs.getStringList('titles');
+    final List<String>? datas = prefs.getStringList('notes');
     setState(() {
-      items = data!;
+      title = data!;
+      notes = datas!;
     });
   }
 
@@ -63,47 +65,48 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Color.fromARGB(255, 13, 144, 35),
           tooltip: 'Increment',
           onPressed: () {
-            // showDialog(
-            //   context: context,
-            //   builder: (ctx) => AlertDialog(
-            //     actions: <Widget>[
-            //       TextField(
-            //         decoration: InputDecoration(label: Text("title")),
-            //         controller: title,
-            //       ),
-            //       TextField(decoration: InputDecoration(label: Text("notes"))),
-            //       TextButton(
-            //         onPressed: () async {
-            //           final SharedPreferences prefs =
-            //               await SharedPreferences.getInstance();
-            //           await prefs.setString('title', title.text);
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                actions: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(label: Text("title")),
+                    controller: titlecontroller,
+                  ),
+                  TextField(
+                      controller: notescontroller,
+                      decoration: InputDecoration(label: Text("notes"))),
+                  TextButton(
+                    onPressed: () async {
+                      addedtitle.add(titlecontroller.text);
+                      addednotes.add(notescontroller.text);
+                      setdata();
 
-            //           Navigator.of(ctx).pop();
-
-            //         },
-            //         child: Padding(
-            //           padding: const EdgeInsets.all(10.0),
-            //           child: Container(
-            //             color: Colors.green,
-            //             child: const Text("okay"),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // );
-            setdata();
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        color: Colors.green,
+                        child: const Text("okay"),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+            // setdata();
           },
           child: const Icon(Icons.add, color: Colors.white, size: 28),
         ),
-        body: items.isEmpty
+        body: title.isEmpty
             ? Center(child: CircularProgressIndicator())
             : MasonryGridView.builder(
-                itemCount: 3,
+                itemCount: title.length,
                 gridDelegate:
                     const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                 itemBuilder: (context, index) =>
-                    notesCard(items: items[index])));
+                    notesCard(items: title[index], itemss: notes[index])));
   }
 }
